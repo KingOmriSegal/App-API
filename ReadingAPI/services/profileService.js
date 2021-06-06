@@ -48,7 +48,8 @@ exports.sendTestData = () => {
     return testProfile;
 };
 
-exports.sendDataById = (profileSNN) => {
-    const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSNN);
-    console.log(matchedProfile)
+exports.sendDataById = (profileSSN) => {
+    const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
+
+    return(matchedProfile ? matchedProfile : '{}');
 }

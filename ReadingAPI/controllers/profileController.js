@@ -8,9 +8,7 @@ router.get('/test', (req, res) => {
 });
 
 router.get('/:ssn', (req, res) => {
-    console.log(req.params.ssn);
-    profileService.sendDataById(req.params.ssn);
-    res.send('hi')
+    res.send(profileService.sendDataById(req.params.ssn));
 })
 
 // router.get('/msg/:userMsg', (req, res) => {

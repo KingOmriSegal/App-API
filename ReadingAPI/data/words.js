@@ -11,8 +11,4 @@ module.exports = [
         wordId: "1236",
         word: "רצח"
     },
-    {
-        wordId: "1237",
-        word: "דבר"
-    },
 ]

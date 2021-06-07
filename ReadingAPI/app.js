@@ -5,7 +5,7 @@ const logger = require('morgan');
 
 const profileController = require('./controllers/profileController');
 const wordController = require('./controllers/wordController');
-// const chatsController = require('./controllers/chatsController');
+const postController = require('./controllers/postController')
 
 const app = express();
 
@@ -18,6 +18,7 @@ app.use(express.json());
 
 app.use('/profile', profileController);
 app.use('/words', wordController);
+app.use('/posts', postController);
 // app.use('/chats', chatsController);
 
 // Rest Setup

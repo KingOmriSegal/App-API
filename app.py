@@ -1,5 +1,10 @@
+imoprt os
+
+os.system('pip install psycopg2')
+
 import psycopg2
 from psycopg2 import Error
+
 
 try:
     # Connect to an existing database

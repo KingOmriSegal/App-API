@@ -1,7 +1,5 @@
 import os
 
-os.system('pip install facebook_scraper')
-
 from facebook_scraper import get_posts
 import requests
 import json
@@ -34,7 +32,8 @@ def get_all_posts(facebook_account: str):
 
 def process_image(image_url):
     image = requests.get(image_url).content
-    encoded_image = base64.encodebytes(image).decode('utf-8')
+    encrypted_image = image
+    encoded_image = base64.encodebytes(encrypted_image).decode('utf-8')
 
     return encoded_image
 

@@ -1,4 +1,7 @@
 const profiles = require('../data/profiles');
+const SUSPECT = 1;
+const REQUESTED = 2;
+const SAFE = 0;
 // const User = require('../models/user');
 // const usersRepository = require('../repositories/usersRepository');
 
@@ -35,9 +38,9 @@ exports.sendNumberSuspectsRequested = () => {
     let requested = 0;
 
     profiles.forEach(({ wantedState }) => {
-        if (wantedState === 2) {
+        if (wantedState === REQUESTED) {
             requested += 1;
-        } else if (wantedState === 1) {
+        } else if (wantedState === SUSPECT) {
             suspects += 1;
         }
     });
@@ -55,9 +58,9 @@ exports.sendSuspectsRequested = () => {
     profiles.forEach(profile => {
         const { wantedState } = profile;
 
-        if (wantedState === 2) {
+        if (wantedState === REQUESTED) {
             requested.push(profile);
-        } else if (wantedState === 1) {
+        } else if (wantedState === SUSPECT) {
             suspects.push(profile);
         }
     });
@@ -66,7 +69,7 @@ exports.sendSuspectsRequested = () => {
         suspects: profilesToBasicData(suspects),
         requested: profilesToBasicData(requested)
     };
-}
+};
 
 const profilesToBasicData = (profileData) => {
     const updatedProfiles = profileData.map(profile => {
@@ -80,4 +83,14 @@ const profilesToBasicData = (profileData) => {
     });
 
     return updatedProfiles;
+};
+
+exports.sendIsSuspectById = (profileSSN) => {
+    const profile = profiles.find( ({ SSN }) => SSN === profileSSN);
+
+    const isSuspect = ((profile && profile.wantedState != SAFE) ? 'true' : 'false');
+
+    return {
+        isSuspect
+    };
 }

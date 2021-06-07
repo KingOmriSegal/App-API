@@ -19,4 +19,8 @@ router.get('/all/suspectsRequested', (req, res) => {
     res.send(profileService.sendSuspectsRequested());
 });
 
+router.get('/id/:ssn/isSuspect', (req, res) => {
+    res.send(profileService.sendIsSuspectById(req.params.ssn));
+})
+
 module.exports = router;

@@ -1,4 +1,4 @@
-imoprt os
+import os
 
 os.system('pip install psycopg2')
 

@@ -20,36 +20,64 @@ const profiles = require('../data/profiles');
 //     }    
 // };
 
-exports.sendTestData = () => {
-    const testProfile = {
-        SSN: '012345678',
-        firstname: 'שון',
-        lastname: 'מנדס',
-        phoneNumber: '1112223344',
-        address: '1600 Pennsylvania Avenue NW',
-        wantedState: 1,
-        reports: [
-            {
-                startingDate: '2021-04-28T00:00:00.000Z',
-                expiredDate: '2021-06-02T00:00:00.000Z',
-            },
-            {
-                startingDate: '2021-05-28T00:00:00.000Z',
-                expiredDate: '2021-06-03T00:00:00.000Z',
-            },
-        ],
-        drivingLicense: {
-            status: 'Expired',
-            start:'2019-04-28T00:00:00.000Z',
-            end: '2021-04-28T00:00:00.000Z'
-        }
-    };
-
-    return testProfile;
-};
-
 exports.sendDataById = (profileSSN) => {
     const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
 
     return(matchedProfile ? matchedProfile : '{}');
+}
+
+exports.sendAllProfiles = () => {
+    return profiles;
+};
+
+exports.sendNumberSuspectsRequested = () => {
+    let suspects = 0;
+    let requested = 0;
+
+    profiles.forEach(({ wantedState }) => {
+        if (wantedState === 2) {
+            requested += 1;
+        } else if (wantedState === 1) {
+            suspects += 1;
+        }
+    });
+
+    return {
+        suspects,
+        requested
+    };
+};
+
+exports.sendSuspectsRequested = () => {
+    let suspects = [];
+    let requested = [];
+
+    profiles.forEach(profile => {
+        const { wantedState } = profile;
+
+        if (wantedState === 2) {
+            requested.push(profile);
+        } else if (wantedState === 1) {
+            suspects.push(profile);
+        }
+    });
+
+    return {
+        suspects: profilesToBasicData(suspects),
+        requested: profilesToBasicData(requested)
+    };
+}
+
+const profilesToBasicData = (profileData) => {
+    const updatedProfiles = profileData.map(profile => {
+        return {
+            SSN: profile.SSN,
+            firstname: profile.firstname,
+            lastname: profile.lastname,
+            imageURL: profile.imageURL,
+            wantedState: profile.wantedState
+        };
+    });
+
+    return updatedProfiles;
 }

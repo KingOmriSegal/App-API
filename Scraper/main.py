@@ -1,7 +1,3 @@
-import os
-
-os.system('pip install facebook_scraper')
-
 from facebook_scraper import get_posts
 import requests
 import json

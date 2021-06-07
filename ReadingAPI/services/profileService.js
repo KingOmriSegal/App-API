@@ -86,10 +86,17 @@ const profilesToBasicData = (profileData) => {
 
 exports.sendIsSuspectById = (profileSSN) => {
     const profile = profiles.find( ({ SSN }) => SSN === profileSSN);
+    let dataToSend = {};
 
-    const isSuspect = ((profile && profile.wantedState != SAFE) ? 'true' : 'false');
+    if (profile) {
+        const isSuspect = ((profile.wantedState != SAFE) ? 'true' : 'false');
+        
+        dataToSend = {
+            isSuspect,
+            firstname: profile.firstname,
+            lastname: profile.lastname
+        }
+    }
 
-    return {
-        isSuspect
-    };
+    return dataToSend;
 }

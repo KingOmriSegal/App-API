@@ -99,4 +99,18 @@ exports.sendIsSuspectById = (profileSSN) => {
     }
 
     return dataToSend;
-}
+};
+
+exports.updateWantedState = (profileSSN) => {
+    let profile = profiles.find( ({ SSN }) => SSN === profileSSN);
+
+    if (profile) {
+        profiles.pop(profile);
+        
+        if (profile.wantedState === SUSPECT) {
+            profile.wantedState = REQUESTED;
+        } else if (profile.wantedState === REQUESTED) {
+            profile.wantedState = SUSPECT
+        }
+    };
+};

@@ -21,6 +21,10 @@ router.get('/all/suspectsRequested', (req, res) => {
 
 router.get('/id/:ssn/isSuspect', (req, res) => {
     res.send(profileService.sendIsSuspectById(req.params.ssn));
-})
+});
+
+router.patch('/id/:ssn/change/wantedState', (req, res) => {
+    res.send(profileService.updateWantedState(req.params.ssn));
+});
 
 module.exports = router;

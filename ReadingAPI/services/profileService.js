@@ -78,7 +78,6 @@ const profilesToBasicData = (profileData) => {
             firstname: profile.firstname,
             lastname: profile.lastname,
             imageURL: profile.imageURL,
-            wantedState: profile.wantedState
         };
     });
 

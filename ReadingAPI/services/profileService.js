@@ -103,18 +103,10 @@ exports.sendIsSuspectById = (profileSSN) => {
     return dataToSend;
 };
 
-exports.updateWantedState = (profileSSN) => {
-    let profile = profiles.find( ({ SSN }) => SSN === profileSSN);
-
-    if (profile) {
-        profiles.pop(profile);
-        
-        if (profile.wantedState === SUSPECT) {
-            profile.wantedState = REQUESTED;
-        } else if (profile.wantedState === REQUESTED) {
-            profile.wantedState = SUSPECT
-        }
-
-        profiles.push(profile);
-    };
+exports.updateWantedState = async (profileSSN) => {
+    const profileQuery = `UPDATE profiles
+                        SET wanted_state = (wanted_state % 2) + 1
+                        WHERE ssn = $1;`;
+    const values = [profileSSN];
+    await pool.query(profileQuery, values);
 };

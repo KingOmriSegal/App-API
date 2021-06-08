@@ -9,16 +9,16 @@ ID = 4
 
 
 def main():
-    facebook_accounts = filter(bool, [line.strip() for line in open("accounts.txt")])
-    for facebook_account in facebook_accounts:
-        crawl(facebook_account)
+    facebook_accounts = list(filter(bool, [line.strip() for line in open("accounts.txt")]))
+
+    with Pool(min(len(facebook_accounts), 10)) as pool:
+        pool.map(crawl, facebook_accounts)
 
 
 def crawl(facebook_account):
     for post in get_all_posts(facebook_account):
         print(post)
         # requests.post(f"{FILTERER_IP}/{ID}", data=post)
-
 
 
 def get_all_posts(facebook_account: str):
@@ -28,7 +28,7 @@ def get_all_posts(facebook_account: str):
             'username': facebook_account,
             'postDate': str(post['time']),
             'likes': post['likes'],
-            'images': [process_image(image_url) for image_url in post['images']]
+            # 'images': [process_image(image_url) for image_url in post['images']]
         }
 
 

@@ -21,7 +21,7 @@ const addPost = async (post) => {
             console.log(err.stack)
         }
         else {
-            console.log(res);
+            console.log(res.rows);
         }
     });
     

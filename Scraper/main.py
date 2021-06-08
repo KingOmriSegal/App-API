@@ -2,8 +2,9 @@ from facebook_scraper import get_posts
 import requests
 import json
 import base64
+import re as regex
 
-id = 1337
+ID = 4
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
 def crawl(facebook_account):
     for post in get_all_posts(facebook_account):
         print(post)
-        # requests.post(f"{BODEL_IP}/{id}", data=post)
+        # requests.post(f"{FILTERER_IP}/{ID}", data=post)
 
 
 def get_all_posts(facebook_account: str):
@@ -30,6 +31,10 @@ def get_all_posts(facebook_account: str):
 
 def process_image(image_url):
     image = requests.get(image_url).content
+    image_filename = regex.search('([^/]+$)', image_url)
+    with open(f"~/scraped-images/{image_filename}", "wb") as image_file:
+        image_file.write(image)
+
     encoded_image = base64.encodebytes(image).decode('utf-8')
 
     return encoded_image

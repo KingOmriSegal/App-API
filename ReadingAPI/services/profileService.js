@@ -26,10 +26,9 @@ const SAFE = 0;
 // };
 
 exports.sendDataById = (profileSSN) => {
-    // const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
+    const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
 
-    // return(matchedProfile ? matchedProfile : '{}');
-
+    return(matchedProfile ? matchedProfile : '{}');
 }
 
 exports.sendAllProfiles = () => {

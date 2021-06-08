@@ -18,9 +18,14 @@ exports.addNewWord = async (newWord) => {
 };
 
 exports.deleteWord = async (wordId) => {
+    const values = [wordId];
+
+    const postLinkQuery = `DELETE FROM post_word_links
+                            WHERE word_id = $1`;
+    await pool.query(postLinkQuery, values);
+    
     const wordQuery = `DELETE FROM words
                        WHERE word_id = $1;`;
-    const values = [wordId];
     await pool.query(wordQuery, values);
 };
 

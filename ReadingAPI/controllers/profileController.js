@@ -29,8 +29,13 @@ router.get('/all/suspectsRequested', async (req, res) => {
     }
 });
 
-router.get('/id/:ssn/isSuspect', (req, res) => {
-    res.send(profileService.sendIsSuspectById(req.params.ssn));
+router.get('/id/:ssn/isSuspect', async (req, res) => {
+    try {
+        const output = await profileService.sendIsSuspectById(req.params.ssn);
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 router.patch('/id/:ssn/change/wantedState', async (req, res) => {

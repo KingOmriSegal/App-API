@@ -1,4 +1,4 @@
-// const profiles = require('../data/profiles');
+const profiles = require('../data/profiles');
 const pool = require('../dbConnection/db');
 
 const SUSPECT = 1;
@@ -96,17 +96,24 @@ const profilesToBasicData = (profileData) => {
     return updatedProfiles;
 };
 
-exports.sendIsSuspectById = (profileSSN) => {
-    const profile = profiles.find( ({ SSN }) => SSN === profileSSN);
+exports.sendIsSuspectById = async (profileSSN) => {
+    const profileQuery = `SELECT firstname, lastname, wanted_state
+                            FROM profiles
+                            WHERE ssn = $1;`;
+    const values = [profileSSN];
+    const output = await pool.query(profileQuery, values);
+
+    // const profile = profiles.find( ({ SSN }) => SSN === profileSSN);
     let dataToSend = {};
 
-    if (profile) {
-        const isSuspect = ((profile.wantedState != SAFE) ? 'true' : 'false');
+    if (output) {
+        const profileToSend = output.rows[0];
+        const isSuspect = ((profileToSend.wanted_state != SAFE) ? 'true' : 'false');
         
         dataToSend = {
             isSuspect,
-            firstname: profile.firstname,
-            lastname: profile.lastname
+            firstname: profileToSend.firstname,
+            lastname: profileToSend.lastname
         }
     }
 

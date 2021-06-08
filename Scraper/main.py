@@ -3,13 +3,16 @@ import requests
 import json
 import base64
 import re as regex
+from multiprocessing import Pool
+
 
 ID = 4
 
 
 def main():
-    facebook_account = "joebiden"
-    crawl(facebook_account)
+    facebook_accounts = filter(bool, [line.strip() for line in open("accounts.txt")])
+    for facebook_account in facebook_accounts:
+        crawl(facebook_account)
 
 
 def crawl(facebook_account):
@@ -31,9 +34,9 @@ def get_all_posts(facebook_account: str):
 
 def process_image(image_url):
     image = requests.get(image_url).content
-    image_filename = regex.search('([^/]+$)', image_url)
-    with open(f"~/scraped-images/{image_filename}", "wb") as image_file:
-        image_file.write(image)
+    # image_filename = regex.search('([^/]+$)', image_url)
+    # with open(f"~/scraped-images/{image_filename}", "wb") as image_file:
+    #     image_file.write(image)
 
     encoded_image = base64.encodebytes(image).decode('utf-8')
 

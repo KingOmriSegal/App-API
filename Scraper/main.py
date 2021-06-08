@@ -3,7 +3,7 @@ import requests
 import json
 import base64
 
-id = 1337
+id = 4
 
 
 def main():
@@ -14,7 +14,7 @@ def main():
 def crawl(facebook_account):
     for post in get_all_posts(facebook_account):
         print(post)
-        # requests.post(f"{BODEL_IP}/{id}", data=post)
+        # requests.post(f"{FILTERER_IP}/{id}", data=post)
 
 
 def get_all_posts(facebook_account: str):

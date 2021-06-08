@@ -28,8 +28,8 @@ module.exports = [
     {
         profileId: '1237',
         SSN: '111111111',
-        firstname: 'שון',
-        lastname: 'מנדל',
+        firstname: 'אופק',
+        lastname: 'חביב',
         phoneNumber: '1112223344',
         address: '1600 Pennsylvania Avenue NW',
         wantedState: 2,
@@ -106,8 +106,8 @@ module.exports = [
     {
         profileId: '1234',
         SSN: '444444444',
-        firstname: 'אופק',
-        lastname: 'מנדס',
+        firstname: 'עידן',
+        lastname: 'בן יהודה',
         phoneNumber: '1112223344',
         address: '2800 E Observatory Rd, Los Angeles',
         wantedState: 2,
@@ -132,11 +132,11 @@ module.exports = [
     {
         profileId: '1234',
         SSN: '555555555',
-        firstname: 'יוני',
-        lastname: 'דוד',
+        firstname: 'רועי',
+        lastname: 'פורת',
         phoneNumber: '1112223344',
         address: '20 W 34th St, New York',
-        wantedState: 0,
+        wantedState: 2,
         imageURL: 'https://assets.zabbix.com/img/brands/gitlab.svg',
         reports: [
             {

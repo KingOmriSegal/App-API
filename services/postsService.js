@@ -2,9 +2,9 @@ const pool = require('../db/config');
 
 
 const addPost = async (post) => {
-    const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES('EisenSkrrrrrrrrrrrrr', 'TEST', '2021-02-02 00:00:00', 5)"
+    const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES('$1', '$2', '$3', $4)"
     const values = [post.username, post.content, post.postDate, post.likes];
-    pool.query(insertQuery, (err, res) => {
+    pool.query(insertQuery, values, (err, res) => {
         if (err) {
             console.log(err.stack);
         }

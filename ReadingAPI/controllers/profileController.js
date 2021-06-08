@@ -15,8 +15,13 @@ router.get('/all/number/suspectsRequested', (req, res) => {
     res.send(profileService.sendNumberSuspectsRequested());
 });
 
-router.get('/all/suspectsRequested', (req, res) => {
-    res.send(profileService.sendSuspectsRequested());
+router.get('/all/suspectsRequested', async (req, res) => {
+    try {
+        const output = await profileService.sendSuspectsRequested();
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 router.get('/id/:ssn/isSuspect', (req, res) => {

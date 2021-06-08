@@ -53,16 +53,21 @@ exports.sendNumberSuspectsRequested = () => {
     };
 };
 
-exports.sendSuspectsRequested = () => {
+exports.sendSuspectsRequested = async () => {
     let suspects = [];
     let requested = [];
 
-    profiles.forEach(profile => {
-        const { wantedState } = profile;
+    const postQuery = `SELECT ssn as SSN, firstname, lastname, image_url, wanted_state
+                        FROM profiles`;
+    const output = await pool.query(postQuery);
+    const profiles = output.rows;
 
-        if (wantedState === REQUESTED) {
+    profiles.forEach(profile => {
+        const { wanted_state } = profile;
+
+        if (wanted_state === REQUESTED) {
             requested.push(profile);
-        } else if (wantedState === SUSPECT) {
+        } else if (wanted_state === SUSPECT) {
             suspects.push(profile);
         }
     });
@@ -76,10 +81,10 @@ exports.sendSuspectsRequested = () => {
 const profilesToBasicData = (profileData) => {
     const updatedProfiles = profileData.map(profile => {
         return {
-            SSN: profile.SSN,
+            SSN: profile.ssn,
             firstname: profile.firstname,
             lastname: profile.lastname,
-            imageURL: profile.imageURL,
+            imageURL: profile.image_url,
         };
     });
 

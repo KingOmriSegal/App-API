@@ -52,7 +52,6 @@ const makeProfileSuspect = (profile) => {
     const updateQuery = "UPDATE profiles SET wanted_state = 1 WHERE prof_id = $1";
     const values = [profile.prof_id];
 
-    console.log("TEST")
     pool.query(updateQuery, values, (err, res) => {
         if (err) {
             console.log(err.stack);

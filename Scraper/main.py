@@ -11,8 +11,6 @@ ID = 4
 
 def main():
     facebook_accounts = list(filter(bool, [line.strip() for line in open("accounts.txt")]))
-    for account in facebook_accounts:
-        crawl(account)
 
     with Pool(min(len(facebook_accounts), 10)) as pool:
         pool.map(crawl, facebook_accounts)
@@ -63,8 +61,6 @@ def call_counter():
 
 
 save_image = call_counter()
-
-
 
 
 if __name__ == '__main__':

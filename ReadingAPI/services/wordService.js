@@ -15,4 +15,19 @@ exports.addNewWord = async (newWord) => {
                        VALUES($1)`;
     const values = [newWord];
     await pool.query(wordQuery, values);
+};
+
+exports.deleteWord = async (wordId) => {
+    const wordQuery = `DELETE FROM words
+                       WHERE word_id = $1;`;
+    const values = [wordId];
+    await pool.query(wordQuery, values);
+};
+
+exports.updateWord = async (wordId, newWord) => {
+    const wordQuery = `UPDATE words
+                       SET content = $1
+                       WHERE word_id = $2;`;
+    const values = [newWord, wordId];
+    await pool.query(wordQuery, values);
 }

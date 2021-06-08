@@ -14,13 +14,29 @@ router.get('/all', async (req, res) => {
 
 router.post('/addWord', async (req, res) => {
     try {
-        // const output = await wordService.sendAllWords();
-        // res.send(output);
         await wordService.addNewWord(req.body.word);
         res.send();
     } catch (err) {
         res.status(500).send(err);
     }
 });
+
+router.delete('/deleteWord', async (req, res) => {
+    try {
+        await wordService.deleteWord(req.body.wordId);
+        res.send();
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+router.put('/updateWord', async (req, res) => {
+    try {
+        await wordService.updateWord(req.body.wordId, req.body.word);
+        res.send();
+    } catch (err) {
+        res.status(500).send(err);
+    }
+})
 
 module.exports = router;

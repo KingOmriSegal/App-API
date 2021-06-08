@@ -11,8 +11,13 @@ router.get('/all/total', (req, res) => {
     res.send(profileService.sendAllProfiles());
 });
 
-router.get('/all/number/suspectsRequested', (req, res) => {
-    res.send(profileService.sendNumberSuspectsRequested());
+router.get('/all/number/suspectsRequested', async (req, res) => {
+    try {
+        const output = await profileService.sendNumberSuspectsRequested();
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 router.get('/all/suspectsRequested', async (req, res) => {

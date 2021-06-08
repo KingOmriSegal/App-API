@@ -37,6 +37,15 @@ router.put('/updateWord', async (req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
-})
+});
+
+router.get('/wordStats', async (req, res) => {
+    try {
+        const output = await wordService.sendWordStats();
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
 
 module.exports = router;

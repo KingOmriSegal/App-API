@@ -23,7 +23,7 @@ exports.deleteWord = async (wordId) => {
     const postLinkQuery = `DELETE FROM post_word_links
                             WHERE word_id = $1`;
     await pool.query(postLinkQuery, values);
-    
+
     const wordQuery = `DELETE FROM words
                        WHERE word_id = $1;`;
     await pool.query(wordQuery, values);
@@ -35,4 +35,26 @@ exports.updateWord = async (wordId, newWord) => {
                        WHERE word_id = $2;`;
     const values = [newWord, wordId];
     await pool.query(wordQuery, values);
-}
+};
+
+exports.sendWordStats = async () => {
+    const wordQuery =  `SELECT word.content, 
+                        count(*) as post_count, 
+                        trunc(((count(*)*100.0)/(SELECT count(*) FROM posts)), 0) as percentage
+                        FROM post_word_links as postlink
+                        INNER JOIN words as word
+                        ON word.word_id = postlink.word_id
+                        GROUP BY word.content;`;
+    const output = await pool.query(wordQuery);
+    const allWords = output.rows;
+
+    const wordsStatsToSend = allWords.map(word => {
+        return {
+            word: word.content,
+            postCount: word.post_count,
+            percentage: word.percentage
+        };
+    });
+
+    return wordsStatsToSend;
+};

@@ -1,4 +1,4 @@
-const profiles = require('../data/profiles');
+// const profiles = require('../data/profiles');
 const pool = require('../dbConnection/db');
 
 const SUSPECT = 1;
@@ -35,14 +35,19 @@ exports.sendAllProfiles = () => {
     return profiles;
 };
 
-exports.sendNumberSuspectsRequested = () => {
+exports.sendNumberSuspectsRequested = async () => {
     let suspects = 0;
     let requested = 0;
 
-    profiles.forEach(({ wantedState }) => {
-        if (wantedState === REQUESTED) {
+    const postQuery = `SELECT wanted_state
+                        FROM profiles`;
+    const output = await pool.query(postQuery);
+    const profiles = output.rows;
+
+    profiles.forEach(({ wanted_state }) => {
+        if (wanted_state === REQUESTED) {
             requested += 1;
-        } else if (wantedState === SUSPECT) {
+        } else if (wanted_state === SUSPECT) {
             suspects += 1;
         }
     });

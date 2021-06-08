@@ -6,10 +6,10 @@ const addPost = async (post) => {
     const values = [post.username, post.content, post.postDate, post.likes];
     pool.query(insertQuery, (err, res) => {
         if (err) {
-            console.log(err.stack)
+            console.log(err.stack);
         }
         else {
-            console.log(res.row[0]);
+            console.log(res);
         }
     });
 }

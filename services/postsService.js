@@ -10,9 +10,12 @@ const addPost = async (post) => {
         }
         else {
             console.log(res.rows);
+            flaggedWordsInPost(post.content);
         }
     });
-    
+}
+
+const flaggedWordsInPost = async (content) => {
     const selectQuery = "SELECT * FROM words"
     var words 
    
@@ -24,7 +27,6 @@ const addPost = async (post) => {
             console.log(res.rows);
         }
     });
-    
 }
 
 module.exports = {

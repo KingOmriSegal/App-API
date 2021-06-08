@@ -3,7 +3,7 @@ const router = express.Router();
 
 const postsService = require('../services/postsService');
 
-router.post('/add_post', (req, res) => {
+router.post('', (req, res) => {
     res.send(postsService.addPost(req.body));
 })
 

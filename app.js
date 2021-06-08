@@ -13,5 +13,5 @@ app.use(logger('dev'));
 app.use(express.json());
 
 
-app.use('/post', postsController);
+app.use('', postsController);
 const restServer = app.listen(port, () => console.log(`RestServer is listening on port ${port}`));

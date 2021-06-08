@@ -5,7 +5,7 @@ const logger = require('morgan');
 
 const profileController = require('./controllers/profileController');
 const wordController = require('./controllers/wordController');
-// const postController = require('./controllers/postController')
+const postController = require('./controllers/postController');
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use('/profile', profileController);
 app.use('/words', wordController);
-// app.use('/posts', postController);
+app.use('/posts', postController);
 
 // Rest Setup
 const restServer = app.listen(port, () => console.log(`RestServer is listening on port ${port}`));

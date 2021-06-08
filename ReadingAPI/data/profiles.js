@@ -78,32 +78,6 @@ module.exports = [
         }
     },
     {
-        profileId: '1235',
-        SSN: '333333333',
-        firstname: 'שון',
-        lastname: 'מנדס',
-        phoneNumber: '1112223344',
-        address: '1600 Pennsylvania Avenue NW',
-        wantedState: 1,
-        imageURL: 'https://png.pngtree.com/element_our/20200610/ourmid/pngtree-character-default-avatar-image_2237203.jpg',
-        reports: [
-            {
-                startingDate: '2021-04-28T00:00:00.000Z',
-                expiredDate: '2021-06-02T00:00:00.000Z',
-            },
-            {
-                startingDate: '2021-05-28T00:00:00.000Z',
-                expiredDate: '2021-06-03T00:00:00.000Z',
-            },
-        ],
-        drivingLicense: {
-            status: '9.A',
-            start:'2019-04-28T00:00:00.000Z',
-            end: '2021-04-28T00:00:00.000Z',
-            number: '198-2312-221'
-        }
-    },
-    {
         profileId: '1234',
         SSN: '444444444',
         firstname: 'עידן',

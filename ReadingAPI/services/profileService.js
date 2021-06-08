@@ -1,4 +1,6 @@
 const profiles = require('../data/profiles');
+const pool = require('../dbConnection/db');
+
 const SUSPECT = 1;
 const REQUESTED = 2;
 const SAFE = 0;
@@ -24,9 +26,10 @@ const SAFE = 0;
 // };
 
 exports.sendDataById = (profileSSN) => {
-    const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
+    // const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
 
-    return(matchedProfile ? matchedProfile : '{}');
+    // return(matchedProfile ? matchedProfile : '{}');
+
 }
 
 exports.sendAllProfiles = () => {
@@ -112,5 +115,7 @@ exports.updateWantedState = (profileSSN) => {
         } else if (profile.wantedState === REQUESTED) {
             profile.wantedState = SUSPECT
         }
+
+        profiles.push(profile);
     };
 };

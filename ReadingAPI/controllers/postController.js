@@ -12,4 +12,9 @@ router.get('/id/:ssn/postsLastWeek', async (req, res) => {
     }
 });
 
+// router.get('/all/suspects/lastDay', async (req, res) => {
+//     const output = await postService.postsWithBadWords();
+//     res.send(output);
+// })
+
 module.exports = router;

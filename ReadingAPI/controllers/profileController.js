@@ -12,8 +12,13 @@ router.get('/id/:ssn', async (req, res) => {
     }
 })
 
-router.get('/all/total', (req, res) => {
-    res.send(profileService.sendAllProfiles());
+router.get('/all/total', async (req, res) => {
+    try {
+        const output = await profileService.sendAllProfiles();
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 router.get('/all/number/suspectsRequested', async (req, res) => {

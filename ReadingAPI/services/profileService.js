@@ -1,4 +1,3 @@
-const profiles = require('../data/profiles');
 const pool = require('../dbConnection/db');
 
 const SUSPECT = 1;
@@ -51,9 +50,6 @@ exports.sendDataById = async (profileSSN) => {
     }
 
     return dataToReturn;
-    // const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
-
-    // return(matchedProfile ? matchedProfile : '{}');
 };
 
 const profileDrivingReportData = (profileData, reportData) => {
@@ -90,9 +86,72 @@ const profileDrivingReportData = (profileData, reportData) => {
     return dataToReturn;
 };
 
-exports.sendAllProfiles = () => {
-    return profiles;
+exports.sendAllProfiles = async () => {
+    // return profiles;
+    let profilePromises = [];
+    let profilesToReturn = [];
+    const profileDataQuery = `SELECT prof.*, driv.*
+                         FROM profiles as prof
+                         FULL JOIN driving_licenses as driv
+                         ON prof.driving_license = driv.license_id;`;
+    const output = await pool.query(profileDataQuery);
+    const profileData = output.rows;
+
+    profileData.forEach(profile => {
+        profilePromises.push(setAllProfilesData(profile));
+    });
+
+    profilesToReturn = await Promise.all(profilePromises)
+        .then((profiles) => {
+            return profiles;
+        });
+
+    return profilesToReturn;
 };
+
+const setAllProfilesData = async (profileData) => {
+    const profileReportsQuery = `SELECT rep.*
+                                FROM reports as rep
+                                INNER JOIN profiles as prof
+                                ON rep.profile = prof.prof_id
+                                WHERE prof.ssn = $1;`;
+    const profileReportsValues = [profileData.ssn];
+    const repOutput = await pool.query(profileReportsQuery, profileReportsValues);
+    const reportData = repOutput.rows;
+
+    let drivingData = {};
+
+    if (profileData.driving_license) {
+        drivingData = {
+            status: profileData.status,
+            start: profileData.start_date,
+            end: profileData.end_date
+        }
+    };
+
+    const updatedReportData = reportData.map(report => {
+        return {
+            startingDate: report.starting_date,
+            expiredDate: report.expire_date
+        }
+    });
+
+    const dataToReturn = {
+        profileId: `${profileData.prof_id}`,
+        SSN: profileData.ssn,
+        firstname: profileData.firstname,
+        lastname: profileData.lastname,
+        phoneNumber: profileData.phone_number,
+        address: profileData.address,
+        wantedState: profileData.wanted_state,
+        imageURL: profileData.image_url,
+        reports: updatedReportData,
+        drivingLicense: drivingData
+    };
+
+
+    return dataToReturn;
+}
 
 exports.sendNumberSuspectsRequested = async () => {
     let suspects = 0;

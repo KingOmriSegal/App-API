@@ -5,8 +5,11 @@ import base64
 import re as regex
 from multiprocessing import Pool
 import os
+from random import randint
+from time import sleep
 
 ID = 4
+API = "http://20.101.118.18:80/4"
 
 
 def main():
@@ -17,26 +20,26 @@ def main():
 
 def crawl(facebook_account):
     for post in get_all_posts(facebook_account):
-        # requests.post(API, json=post)
+        requests.post(API, json=post)
         print(post)
 
 
 def get_all_posts(facebook_account: str):
-    for post in get_posts(facebook_account, pages=100):
+    for post in get_posts(facebook_account, pages=100, credentials=("vakiton195@edmondpt.com", "Aa123456")):
         yield {
             'content': post['text'],
             'username': facebook_account,
             'postDate': str(post['time']),
             'likes': post['likes'],
-            # 'images': [process_image(image_url) for image_url in post['images']]
+            'images': [process_image(image_url) for image_url in post['images']]
         }
 
 
 def process_image(image_url):
     try:
         image = requests.get(image_url).content
-        save_image(image, "scraped-images")
-        encoded_image = base64.encodebytes(image).decode('utf-8')
+        # save_image(image, "scraped-images")
+        encoded_image = base64.b64encode(image)
 
         return encoded_image
     except Exception as e:

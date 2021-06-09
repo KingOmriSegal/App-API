@@ -1,5 +1,5 @@
 const pool = require('../db/config');
-
+const fs = require('fs');
 
 const addPost = async (post) => {
     if (await checkIfUnique(post)) {

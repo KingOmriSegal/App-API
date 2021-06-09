@@ -64,3 +64,6 @@ exports.sendWordStats = async () => {
 
     return wordsStatsToSend;
 };
+
+const findAllWordUses = (word) => {
+}

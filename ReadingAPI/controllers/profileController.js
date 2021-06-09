@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { authAdminUser } = require('../middlewares/auth');
 const profileService = require('../services/profileService');
 
 router.get('/id/:ssn', async (req, res) => {
@@ -48,7 +48,7 @@ router.get('/id/:ssn/isSuspect', async (req, res) => {
     }
 });
 
-router.patch('/id/:ssn/change/wantedState', async (req, res) => {
+router.patch('/id/:ssn/change/wantedState', authAdminUser, async (req, res) => {
     try {
         await profileService.updateWantedState(req.params.ssn);
         res.send();

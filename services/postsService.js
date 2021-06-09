@@ -70,6 +70,7 @@ const checkIfUnique = (post) => {
             console.log(err.stack);
         }
         else {
+           console.log(res.rows[0].count < 1)
            return (res.rows[0].count < 1)
         }
     });

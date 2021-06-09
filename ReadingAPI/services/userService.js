@@ -1,37 +1,39 @@
-// const { findUserToLogin, generateToken } = require('../auth/auth');
+const { findUserToLogin, generateToken } = require('../auth/auth');
 const pool = require('../dbConnection/db');
 
-// exports.getSelf = (req, res) => {
-//     const { name, avatar } = req.user;
+exports.getSelf = (req, res) => {
+    const { username, is_admin } = req.user;
 
-//     res.send({ name, avatar });
-// };
+    res.send({
+        username,
+        isAdmin: is_admin
+    });
+};
 
-// const sendUserTokenInfo = (res, user) => {
-//     const token = generateToken(user._id.toString());
+const sendUserTokenInfo = (res, user) => {
+    const token = generateToken(user.id.toString());
 
-//     const { name, avatar } = user;
+    res.send({
+        isAdmin: user.is_admin,
+        token,
+        username: user.username   
+    });    
+};
 
-//     res.send({
-//         user: { name, avatar },
-//         token   
-//     });    
-// };
+exports.login = async (req, res) => {
+    try {
+		const user = await findUserToLogin(req.body);
 
-// exports.login = async (req, res) => {
-//     try {
-// 		const user = await findUserToLogin(req.body);
+		if (user) {
+            sendUserTokenInfo(res, user[0]);
 
-// 		if (user) {
-//             sendUserTokenInfo(res, user[0]);
-
-// 		} else {
-// 			res.status(404).send('Unable to login');
-// 		}
-// 	} catch (error) {
-// 		res.status(400).send(error);
-// 	}
-// };
+		} else {
+			res.status(404).send('Unable to login');
+		}
+	} catch (error) {
+		res.status(400).send(error);
+	}
+};
 
 exports.sendAdminsRegUsers = async () => {
     let admins = [];

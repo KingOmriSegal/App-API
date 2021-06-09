@@ -1,4 +1,5 @@
 const pool = require('../dbConnection/db');
+const moment = require('moment');
 
 exports.countPostsLastWeek = async (profileSSN) => {
     const postQuery = `SELECT count(*) as post_count
@@ -17,6 +18,35 @@ exports.countPostsLastWeek = async (profileSSN) => {
     };
 };
 
+exports.countPostsLastMonth = async (profileSSN) => {
+    const postQuery = `SELECT DATE(post.post_date), count(*)
+                        FROM posts as post
+                        INNER JOIN profiles as prof
+                        ON post.profile = prof.fb_username
+                        WHERE (DATE(post.post_date) >= DATE(now()) - '28 days'::interval) AND
+                        (DATE(post.post_date) <= DATE(now())) AND
+                        (prof.ssn = $1)
+                        GROUP BY DATE(post.post_date)
+                        ORDER BY DATE(post.post_date) DESC;;`
+    const values = [profileSSN];
+    const output = await pool.query(postQuery, values);
+
+    let currentDate = moment();
+    console.log(currentDate);
+    return 'hi';
+
+};
+
+const getDates = (startDate, stopDate) => {
+    let dateArray = [];
+    let currentDate = moment(startDate);
+    stopDate = moment(stopDate);
+    while (currentDate <= stopDate) {
+        dateArray.push( moment(currentDate).format('YYYY-MM-DD') )
+        currentDate = moment(currentDate).add(1, 'days');
+    }
+    return dateArray;
+};
 // exports.postsWithBadWords = async () => {
 //     let postsLastDay;
 //     const allBadWords = await sendAllWords;

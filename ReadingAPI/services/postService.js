@@ -19,6 +19,8 @@ exports.countPostsLastWeek = async (profileSSN) => {
 };
 
 exports.countPostsLastMonth = async (profileSSN) => {
+    let dataToReturn = [];
+
     const postQuery = `SELECT DATE(post.post_date), count(*)
                         FROM posts as post
                         INNER JOIN profiles as prof
@@ -30,10 +32,32 @@ exports.countPostsLastMonth = async (profileSSN) => {
                         ORDER BY DATE(post.post_date) DESC;;`
     const values = [profileSSN];
     const output = await pool.query(postQuery, values);
+    const dbDateOutputs = output.rows.map(row => {
+        return {
+            date: moment(row.date).format('YYYY-MM-DD'),
+            count: row.count}
+    });
 
-    let currentDate = moment();
-    console.log(currentDate);
-    return 'hi';
+    let currentDate = moment().format('YYYY-MM-DD');
+    let pastDate = moment().subtract(28, 'day').format('YYYY-MM-DD');
+    const datesBetween = getDates(pastDate, currentDate);
+
+    datesBetween.forEach(date => {
+        let currDateData = {date, count: 0};
+
+        dbDateOutputs.forEach(dateOutput => {
+            if (dateOutput.date == date) {
+                currDateData = {
+                    date, 
+                    count: parseInt(dateOutput.count)
+                };
+            }
+        })
+
+        dataToReturn.push(currDateData);
+    });
+
+    return dataToReturn;
 
 };
 

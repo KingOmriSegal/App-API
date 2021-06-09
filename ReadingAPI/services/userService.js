@@ -70,3 +70,17 @@ const usersToBasicData = (userData) => {
 
     return updatedUsers;
 };
+
+exports.addNewUser = async (newUser) => {
+    const userQuery = `INSERT INTO users(username, password, is_admin)
+                       VALUES($1, $2, $3)`;
+    const values = [newUser.username, newUser.password, newUser.isAdmin];
+    await pool.query(userQuery, values);
+};
+
+exports.deleteUser = async (userId) => {
+    const userQuery = `DELETE FROM users
+                            WHERE id = $1`;
+    const values = [userId];
+    await pool.query(userQuery, values);
+};

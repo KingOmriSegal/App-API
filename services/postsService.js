@@ -69,7 +69,7 @@ const checkIfUnique = (post) => {
             console.log(err.stack);
         }
         else {
-            console.log(res);
+            console.log(res.rows[0].count < 1)
         }
     });
 }

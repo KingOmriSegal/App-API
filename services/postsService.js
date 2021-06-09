@@ -7,6 +7,7 @@ const addPost = async (post) => {
         const values = [post.username, post.content, post.postDate, post.likes];
         const newPost = (await pool.query(insertQuery, values)).rows[0];
         flaggedWordsInPost(newPost);
+        saveImagesToDisk(post.images);
     }
 }
 
@@ -46,6 +47,40 @@ const checkIfUnique = async (post) => {
     
     return (await pool.query(countQuery, values)).rows[0].count < 1;
 }
+
+const saveImagesToDisk = (images) => {
+    if (!images) {
+        console.log("Images were not received");
+        return;
+    }
+    imagesDirectory = "scraped-images";
+
+    if (!fs.existsSync(imagesDirectory)) {
+        fs.mkdirSync(imagesDirectory);
+    }
+
+    post.images.forEach((image) => {
+        saveImage(image, `${imagesDirectory}/${generateImageName(20)}.png`);
+    })
+
+}
+
+const saveImage = (image, imageName) => {
+    fs.writeFile(imageName, image, 'binary', function (err) {
+        if (err) throw err;
+    })
+}
+
+const generateImageName = (length) => {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    Array(length).fill().forEach(() => {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    });
+    return result;
+}
+
 module.exports = {
     addPost,
 };

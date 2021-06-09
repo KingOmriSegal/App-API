@@ -3,8 +3,13 @@ const router = express.Router();
 
 const profileService = require('../services/profileService');
 
-router.get('/id/:ssn', (req, res) => {
-    res.send(profileService.sendDataById(req.params.ssn));
+router.get('/id/:ssn', async (req, res) => {
+    try {
+        const output = await profileService.sendDataById(req.params.ssn);
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 })
 
 router.get('/all/total', (req, res) => {

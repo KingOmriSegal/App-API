@@ -1,5 +1,4 @@
 const pool = require('../dbConnection/db');
-const { sendAllWords } = require('../services/wordService');
 
 exports.countPostsLastWeek = async (profileSSN) => {
     const postQuery = `SELECT count(*) as post_count

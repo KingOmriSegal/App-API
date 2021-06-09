@@ -26,6 +26,8 @@ const SAFE = 0;
 // };
 
 exports.sendDataById = async (profileSSN) => {
+    let dataToReturn = {};
+
     const profileDataQuery = `SELECT prof.*, driv.*
                          FROM profiles as prof
                          FULL JOIN driving_licenses as driv
@@ -34,28 +36,58 @@ exports.sendDataById = async (profileSSN) => {
     const profileDataValues = [profileSSN];
     const output = await pool.query(profileDataQuery, profileDataValues);
     const profileData = output.rows[0];
+
+    const profileReportsQuery = `SELECT rep.*
+                                FROM reports as rep
+                                INNER JOIN profiles as prof
+                                ON rep.profile = prof.prof_id
+                                WHERE prof.ssn = $1;`;
+    const profileReportsValues = [profileSSN];
+    const repOutput = await pool.query(profileReportsQuery, profileReportsValues);
+    const reportData = repOutput.rows;
     
     if (profileData) {
-        profileDrivingReportData(profileData);
+        dataToReturn = profileDrivingReportData(profileData, reportData);
     }
 
-    const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
+    return dataToReturn;
+    // const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
 
-    return(matchedProfile ? matchedProfile : '{}');
+    // return(matchedProfile ? matchedProfile : '{}');
 };
 
-const profileDrivingReportData = (profileData) => {
-    // const drivingLicense = (profileDate.driving_license ? profileDate.driving_license : {});
-    // console.log(drivingLicense);
+const profileDrivingReportData = (profileData, reportData) => {
+    let drivingData = {};
+
+    if (profileData.driving_license) {
+        drivingData = {
+            status: profileData.status,
+            start: profileData.start_date,
+            end: profileData.end_date
+        }
+    };
+
+    const updatedReportData = reportData.map(report => {
+        return {
+            startingDate: report.starting_date,
+            expiredDate: report.expire_date
+        }
+    });
+
     const dataToReturn = {
-        profileId: profileData.prof_id,
+        profileId: `${profileData.prof_id}`,
         SSN: profileData.ssn,
         firstname: profileData.firstname,
         lastname: profileData.lastname,
         phoneNumber: profileData.phone_number,
         address: profileData.address,
-        wantedState = profileData.wanted_state,
-    }
+        wantedState: profileData.wanted_state,
+        imageURL: profileData.image_url,
+        reports: updatedReportData,
+        drivingLicense: drivingData
+    };
+
+    return dataToReturn;
 };
 
 exports.sendAllProfiles = () => {

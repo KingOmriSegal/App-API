@@ -58,7 +58,6 @@ exports.countPostsLastMonth = async (profileSSN) => {
     });
 
     return dataToReturn;
-
 };
 
 const getDates = (startDate, stopDate) => {
@@ -69,22 +68,19 @@ const getDates = (startDate, stopDate) => {
         dateArray.push( moment(currentDate).format('YYYY-MM-DD') )
         currentDate = moment(currentDate).add(1, 'days');
     }
-    return dateArray;
-};
-// exports.postsWithBadWords = async () => {
-//     let postsLastDay;
-//     const allBadWords = await sendAllWords;
 
-//     const postQuery = `SELECT prof.firstname, prof.lastname, prof.ssn, prof.image_url, post.post_date, post.content
-//                         FROM profiles as prof
-//                         INNER JOIN posts as post
-//                         ON prof.fb_username = post.profile
-//                         WHERE (post.post_date >= now() - '1 day'::interval) AND
-//                         (post.post_date <= now());`;
-//     const output = pool.query(postQuery)
-//         .then(pgRes => {
-//             postsLastDay = pgRes.rows;
-//         });
-    
-//     return 'hi';
-// }
+    return dateArray;
+}
+
+exports.postsWithBadWords = async () => {
+            const postQuery = `SELECT profile.firstname, profile.lastname, post.post_date, STRING_AGG(word.content, ',') AS bad_words, post.content AS post_content, profile.image_url
+            FROM posts AS post
+            JOIN post_word_links AS link ON post.post_id = link.post_id 
+            JOIN words AS word ON word.word_id = link.word_id
+            JOIN profiles AS profile ON profile.fb_username = post.profile
+            WHERE post_date >= (now() - '1 day'::interval)
+            GROUP BY post.post_id, profile.firstname, profile.lastname, profile.image_url
+            ORDER BY post_date desc`;
+            return (await pool.query(postQuery)).rows
+
+    }

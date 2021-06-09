@@ -10,4 +10,4 @@ const pool = new Pool({
 
 // host: "10.128.2.114"
 // port: 5432
-module.exports = pool;
+module.exports = pool;  

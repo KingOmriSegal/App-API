@@ -22,9 +22,13 @@ router.get('/id/:ssn/postsLastMonth', async (req, res) => {
     }
 });
 
-// router.get('/all/suspects/lastDay', async (req, res) => {
-//     const output = await postService.postsWithBadWords();
-//     res.send(output);
-// })
+router.get('/all/suspects/lastDay', async (req, res) => {
+    try {
+        const output = await postService.postsWithBadWords();
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+})
 
 module.exports = router;

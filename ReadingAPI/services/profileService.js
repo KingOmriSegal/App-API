@@ -26,6 +26,16 @@ const SAFE = 0;
 // };
 
 exports.sendDataById = (profileSSN) => {
+    // const profileDataQuery = `SELECT prof.*, driv.*
+    //                      FROM profiles as prof
+    //                      INNER JOIN driving_licenses as driv
+    //                      ON 
+    //                      WHERE prof.ssn = $1`;
+    // const profileDataValues = [profileSSN];
+    // const output = await pool.query(profileDataQuery, profileDataValues);
+    // const profileData = output.rows[0];
+    // console.log(profileData);
+
     const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
 
     return(matchedProfile ? matchedProfile : '{}');

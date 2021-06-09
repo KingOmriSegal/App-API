@@ -35,6 +35,12 @@ exports.updateWord = async (wordId, newWord) => {
                        WHERE word_id = $2;`;
     const values = [newWord, wordId];
     await pool.query(wordQuery, values);
+
+    const wordQuery2 = `DELETE FROM post_word_links
+                        WHERE (word_id = $1) AND
+                        (content <> $2);`;
+    const values2 = [wordId, newWord];
+    await pool.query(wordQuery2, values2);
 };
 
 exports.sendWordStats = async () => {

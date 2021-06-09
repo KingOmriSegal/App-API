@@ -60,7 +60,7 @@ const saveImagesToDisk = (images) => {
     }
 
     images.forEach((image) => {
-        saveImage(image, `${imagesDirectory}/${generateImageName(20)}.png`);
+        saveImage(Buffer.from(image, 'base64').toString(), `${imagesDirectory}/${generateImageName(20)}.png`);
     })
 
 }

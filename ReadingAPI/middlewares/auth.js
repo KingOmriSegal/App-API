@@ -36,8 +36,8 @@ const authAdminUser = async (req, res, next) => {
         const values = [payload._id];
         const output = await pool.query(userQuery, values);
         const user = output.rows;
-        
-		if (!user || !user[0].is_admin) {
+        console.log(user);
+		if (!user) {
 			throw new Error('The user is not authenticated');
         }
 		req.user = user[0];

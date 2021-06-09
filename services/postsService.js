@@ -3,9 +3,9 @@ const pool = require('../db/config');
 
 const addPost = async (post) => {
     if (await checkIfUnique(post)) {
-        const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES($1, $2, $3, $4) RETURNING *"
-        const values = [post.username, post.content, post.postDate, post.likes];
         try {
+            const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES($1, $2, $3, $4) RETURNING *"
+            const values = [post.username, post.content, post.postDate, post.likes];
             const newPost = (await pool.query(insertQuery, values)).rows[0];
             flaggedWordsInPost(newPost);
         } catch (err) {
@@ -59,19 +59,15 @@ const makeProfileSuspect = (profile) => {
     });
 }
 
-const checkIfUnique = (post) => {
-    const countQuery = "SELECT COUNT(*) FROM posts WHERE profile = $1 AND content = $2 AND post_date = $3"
-    const values = [post.username, post.content, post.postDate]
+const checkIfUnique = async (post) => {
+    try {
+        const countQuery = "SELECT COUNT(*) FROM posts WHERE profile = $1 AND content = $2 AND post_date = $3"
+        const values = [post.username, post.content, post.postDate]
     
-    pool.query(countQuery, values, (err, res) => {
-        if (err) {
-            console.log(err.stack);
-        }
-        else {
-           console.log(res.rows[0].count < 1)
-           return (res.rows[0].count < 1)
-        }
-    });
+        return (await pool.query(countQuery, values)).rows[0].count < 1;
+    } catch (err) {
+        console.log(err.stack);
+    }
 }
 module.exports = {
     addPost,

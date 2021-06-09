@@ -1,4 +1,5 @@
 const pool = require('../dbConnection/db');
+const moment = require('moment');
 
 exports.countPostsLastWeek = async (profileSSN) => {
     const postQuery = `SELECT count(*) as post_count
@@ -17,7 +18,7 @@ exports.countPostsLastWeek = async (profileSSN) => {
     };
 };
 
-    exports.postsWithBadWords = async () => {
+exports.postsWithBadWords = async () => {
             const postQuery = `SELECT profile.firstname, profile.lastname, post.post_date, STRING_AGG(word.content, ',') AS bad_words, post.content AS post_content, profile.image_url
             FROM posts AS post
             JOIN post_word_links AS link ON post.post_id = link.post_id 

@@ -20,7 +20,7 @@ router.get('/all/adminsRegUsers', async (req, res) => {
     }
 });
 
-router.post('/addUser', authAdminUser, async (req, res) => {
+router.post('/addUser', async (req, res) => {
     try {
         const newUser = {
             username: req.body.username,
@@ -35,7 +35,7 @@ router.post('/addUser', authAdminUser, async (req, res) => {
     }
 });
 
-router.delete('/deleteUser/:userId', authAdminUser, async (req, res) => {
+router.delete('/deleteUser/:userId', async (req, res) => {
     try {
         await userService.deleteUser(req.params.userId);
         res.send();

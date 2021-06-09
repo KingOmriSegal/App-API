@@ -1,18 +1,16 @@
 const pool = require('../db/config');
 
 
-const addPost = (post) => {
-    if (checkIfUnique(post)) {
+const addPost = async (post) => {
+    if (await checkIfUnique(post)) {
         const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES($1, $2, $3, $4) RETURNING *"
         const values = [post.username, post.content, post.postDate, post.likes];
-        pool.query(insertQuery, values, (err, res) => {
-            if (err) {
-                console.log(err.stack);
-            }
-            else {
-                flaggedWordsInPost(res.rows[0]);
-            }
-        });
+        try {
+            const newPost = (await pool.query(insertQuery, values)).rows[0];
+            flaggedWordsInPost(newPost);
+        } catch (err) {
+            console.log(err.stack);
+        }
     }
 }
 

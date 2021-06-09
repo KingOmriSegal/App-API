@@ -25,21 +25,38 @@ const SAFE = 0;
 //     }    
 // };
 
-exports.sendDataById = (profileSSN) => {
-    // const profileDataQuery = `SELECT prof.*, driv.*
-    //                      FROM profiles as prof
-    //                      INNER JOIN driving_licenses as driv
-    //                      ON 
-    //                      WHERE prof.ssn = $1`;
-    // const profileDataValues = [profileSSN];
-    // const output = await pool.query(profileDataQuery, profileDataValues);
-    // const profileData = output.rows[0];
-    // console.log(profileData);
+exports.sendDataById = async (profileSSN) => {
+    const profileDataQuery = `SELECT prof.*, driv.*
+                         FROM profiles as prof
+                         FULL JOIN driving_licenses as driv
+                         ON prof.driving_license = driv.license_id
+                         WHERE prof.ssn = $1`;
+    const profileDataValues = [profileSSN];
+    const output = await pool.query(profileDataQuery, profileDataValues);
+    const profileData = output.rows[0];
+    
+    if (profileData) {
+        profileDrivingReportData(profileData);
+    }
 
     const matchedProfile = profiles.find( ({ SSN }) => SSN === profileSSN);
 
     return(matchedProfile ? matchedProfile : '{}');
-}
+};
+
+const profileDrivingReportData = (profileData) => {
+    // const drivingLicense = (profileDate.driving_license ? profileDate.driving_license : {});
+    // console.log(drivingLicense);
+    const dataToReturn = {
+        profileId: profileData.prof_id,
+        SSN: profileData.ssn,
+        firstname: profileData.firstname,
+        lastname: profileData.lastname,
+        phoneNumber: profileData.phone_number,
+        address: profileData.address,
+        wantedState = profileData.wanted_state,
+    }
+};
 
 exports.sendAllProfiles = () => {
     return profiles;

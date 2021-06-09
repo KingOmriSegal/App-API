@@ -4,7 +4,11 @@ const router = express.Router();
 const postsService = require('../services/postsService');
 
 router.post('', (req, res) => {
-    res.send(postsService.addPost(req.body));
+    try {
+        res.send(postsService.addPost(req.body));
+    } catch(err) {
+        res.status(500).send();
+    }
 })
 
 module.exports = router;

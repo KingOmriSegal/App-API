@@ -2,6 +2,7 @@ const pool = require('../db/config');
 
 
 const addPost = (post) => {
+    checkIfUnique(post);
     const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES($1, $2, $3, $4) RETURNING *"
     const values = [post.username, post.content, post.postDate, post.likes];
     pool.query(insertQuery, values, (err, res) => {
@@ -59,6 +60,19 @@ const makeProfileSuspect = (profile) => {
     });
 }
 
+const checkIfUnique = (post) => {
+    const countQuery = "SELECT COUNT(*) FROM posts WHERE profile = $1 AND content = $2 AND post_date = $3"
+    const values = [post.username, post.content, post.postDate]
+    
+    pool.query(countQuery, values, (err, res) => {
+        if (err) {
+            console.log(err.stack);
+        }
+        else {
+            console.log(res);
+        }
+    });
+}
 module.exports = {
     addPost,
 };

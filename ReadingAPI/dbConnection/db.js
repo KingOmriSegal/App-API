@@ -8,4 +8,6 @@ const pool = new Pool({
     port: 5432
 });
 
+// host: "10.128.2.114"
+// port: 5432
 module.exports = pool;

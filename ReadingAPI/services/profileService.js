@@ -42,9 +42,9 @@ exports.sendNumberSuspectsRequested = async () => {
     const postQuery = `SELECT wanted_state
                         FROM profiles`;
     const output = await pool.query(postQuery);
-    const profiles = output.rows;
+    const profileData = output.rows;
 
-    profiles.forEach(({ wanted_state }) => {
+    profileData.forEach(({ wanted_state }) => {
         if (wanted_state === REQUESTED) {
             requested += 1;
         } else if (wanted_state === SUSPECT) {
@@ -65,9 +65,9 @@ exports.sendSuspectsRequested = async () => {
     const postQuery = `SELECT ssn as SSN, firstname, lastname, image_url, wanted_state
                         FROM profiles`;
     const output = await pool.query(postQuery);
-    const profiles = output.rows;
+    const profileData = output.rows;
 
-    profiles.forEach(profile => {
+    profileData.forEach(profile => {
         const { wanted_state } = profile;
 
         if (wanted_state === REQUESTED) {

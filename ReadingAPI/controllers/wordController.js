@@ -21,9 +21,9 @@ router.post('/addWord', async (req, res) => {
     }
 });
 
-router.delete('/deleteWord', async (req, res) => {
+router.delete('/deleteWord/:wordId', async (req, res) => {
     try {
-        await wordService.deleteWord(req.body.wordId);
+        await wordService.deleteWord(req.params.wordId);
         res.send();
     } catch (err) {
         res.status(500).send(err);

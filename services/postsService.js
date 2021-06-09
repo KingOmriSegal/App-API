@@ -59,7 +59,7 @@ const saveImagesToDisk = (images) => {
         fs.mkdirSync(imagesDirectory);
     }
 
-    post.images.forEach((image) => {
+    images.forEach((image) => {
         saveImage(image, `${imagesDirectory}/${generateImageName(20)}.png`);
     })
 

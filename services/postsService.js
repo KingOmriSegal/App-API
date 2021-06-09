@@ -2,17 +2,18 @@ const pool = require('../db/config');
 
 
 const addPost = (post) => {
-    checkIfUnique(post);
-    const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES($1, $2, $3, $4) RETURNING *"
-    const values = [post.username, post.content, post.postDate, post.likes];
-    pool.query(insertQuery, values, (err, res) => {
-        if (err) {
-            console.log(err.stack);
-        }
-        else {
-            flaggedWordsInPost(res.rows[0]);
-        }
-    });
+    if (checkIfUnique(post)) {
+        const insertQuery = "INSERT INTO posts (profile, content, post_date, likes) VALUES($1, $2, $3, $4) RETURNING *"
+        const values = [post.username, post.content, post.postDate, post.likes];
+        pool.query(insertQuery, values, (err, res) => {
+            if (err) {
+                console.log(err.stack);
+            }
+            else {
+                flaggedWordsInPost(res.rows[0]);
+            }
+        });
+    }
 }
 
 const flaggedWordsInPost = async (post) => {
@@ -69,7 +70,7 @@ const checkIfUnique = (post) => {
             console.log(err.stack);
         }
         else {
-            console.log(res.rows[0].count < 1)
+           return (res.rows[0].count < 1)
         }
     });
 }

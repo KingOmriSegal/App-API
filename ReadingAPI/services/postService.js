@@ -18,7 +18,7 @@ exports.countPostsLastWeek = async (profileSSN) => {
 };
 
     exports.postsWithBadWords = async () => {
-            const postQuery = `SELECT profile.firstname, profile.lastname, post.post_date, STRING_AGG(word.content, ',') AS bad_words FROM posts AS post
+            const postQuery = `SELECT profile.firstname, profile.lastname, post.post_date, STRING_AGG(word.content, ',') AS bad_words, post.content AS post_content FROM posts AS post
             JOIN post_word_links AS link ON post.post_id = link.post_id 
             JOIN words AS word ON word.word_id = link.word_id
             JOIN profiles AS profile ON profile.fb_username = post.profile

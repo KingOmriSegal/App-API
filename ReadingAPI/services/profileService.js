@@ -245,3 +245,41 @@ exports.updateWantedState = async (profileSSN) => {
     const values = [profileSSN];
     await pool.query(profileQuery, values);
 };
+
+exports.sendLastDayChanges = async () => {
+    let dataToReturn = {};
+    const NEW_SUSPECT = 0;
+    const NEW_REQUESTED = 1;
+
+    const changesQuery = `SELECT change_type, count(*)
+                            FROM status_changes
+                            WHERE (change_date >= now() - '1 day'::interval) AND
+                            (change_date <= now())
+                            GROUP BY change_type;`
+    const output = await pool.query(changesQuery);
+    
+    if (output) {
+        const changeTypes = output.rows;
+        let newSuspects;
+        let newRequested;
+        let requestedReleased;
+
+        changeTypes.forEach(change => {
+            if (change.change_type == NEW_SUSPECT) {
+                newSuspects = parseInt(change.count)
+            } else if (change.change_type == NEW_REQUESTED) {
+                newRequested = parseInt(change.count)
+            } else {
+                requestedReleased = parseInt(change.count)
+            }
+        });
+
+        dataToReturn = {
+            newSuspects,
+            newRequested,
+            requestedReleased
+        }
+    }
+
+    return dataToReturn;
+};

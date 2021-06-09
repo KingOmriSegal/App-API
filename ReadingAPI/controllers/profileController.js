@@ -57,4 +57,13 @@ router.patch('/id/:ssn/change/wantedState', authAdminUser, async (req, res) => {
     }
 });
 
+router.get('/changes/wantedState/lastDay', async (req, res) => {
+    try {
+        const output = await profileService.sendLastDayChanges();
+        res.send(output);
+    } catch (err) {
+        res.status(500).send(err);
+    } 
+});
+
 module.exports = router;

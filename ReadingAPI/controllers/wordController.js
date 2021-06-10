@@ -12,7 +12,7 @@ router.get('/all', async (req, res) => {
     }
 });
 
-router.post('/addWord', authAdminUser, async (req, res) => {
+router.post('/addWord', async (req, res) => {
     try {
         await wordService.addNewWord(req.body.word);
         res.send();
@@ -21,7 +21,7 @@ router.post('/addWord', authAdminUser, async (req, res) => {
     }
 });
 
-router.delete('/deleteWord/:wordId', authAdminUser, async (req, res) => {
+router.delete('/deleteWord/:wordId', async (req, res) => {
     try {
         await wordService.deleteWord(req.params.wordId);
         res.send();
@@ -30,7 +30,7 @@ router.delete('/deleteWord/:wordId', authAdminUser, async (req, res) => {
     }
 });
 
-router.put('/updateWord', authAdminUser, async (req, res) => {
+router.put('/updateWord', async (req, res) => {
     try {
         await wordService.updateWord(req.body.wordId, req.body.word);
         res.send();

@@ -48,7 +48,7 @@ router.get('/id/:ssn/isSuspect', async (req, res) => {
     }
 });
 
-router.patch('/id/:ssn/change/wantedState', authAdminUser, async (req, res) => {
+router.patch('/id/:ssn/change/wantedState', async (req, res) => {
     try {
         await profileService.updateWantedState(req.params.ssn);
         res.send();

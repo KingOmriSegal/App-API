@@ -12,9 +12,10 @@ exports.sendAllWords = async () => {
 
 exports.addNewWord = async (newWord) => {
     const wordQuery = `INSERT INTO words(content)
-                       VALUES($1)`;
+                       VALUES($1) RETURNING *;`;
     const values = [newWord];
-    await pool.query(wordQuery, values);
+    const newWordEntry = (await pool.query(wordQuery, values)).rows[0];
+    await flaggedWordsInPost(newWordEntry)
 };
 
 exports.deleteWord = async (wordId) => {
@@ -32,10 +33,11 @@ exports.deleteWord = async (wordId) => {
 exports.updateWord = async (wordId, newWord) => {
     const wordQuery = `UPDATE words
                        SET content = $1
-                       WHERE word_id = $2;`;
+                       WHERE word_id = $2 RETURNING *;`;
     const values = [newWord, wordId];
-    await pool.query(wordQuery, values);
+    const newWordEntry = (await pool.query(wordQuery, values)).rows[0];
 
+    await flaggedWordsInPost(newWordEntry)
     const wordQuery2 = `DELETE FROM post_word_links
                         WHERE (word_id = $1) AND
                         (content <> $2);`;
@@ -65,5 +67,28 @@ exports.sendWordStats = async () => {
     return wordsStatsToSend;
 };
 
-const findAllWordUses = (word) => {
+const flaggedWordsInPost = async (word) => {
+    const selectPostsQuery = "SELECT posts.content AS content, posts.post_id AS post_id, profiles.prof_id AS prof_id, profiles.wanted_state AS wanted_state FROM posts JOIN profiles ON posts.profile = profiles.fb_username";
+    const posts = (await pool.query(selectPostsQuery)).rows;
+    posts.forEach(post => {
+        if (post.content.includes(word.content)) {
+            addPostWordLink(post.post_id, word.word_id);
+            if (post.wanted_state === 0) {
+                makeProfileSuspect(post);
+            }
+        }
+    });
+}
+
+const addPostWordLink = (post_id, word_id) => {
+    const insertQuery = "INSERT INTO post_word_links (post_id, word_id) VALUES ($1, $2)";
+    const values = [post_id, word_id]
+    pool.query(insertQuery, values);
+}
+
+const makeProfileSuspect = (profile) => {
+    const updateQuery = "UPDATE profiles SET wanted_state = 1 WHERE prof_id = $1";
+    const values = [profile.prof_id];
+
+    pool.query(updateQuery, values);
 }

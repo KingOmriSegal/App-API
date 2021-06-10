@@ -35,7 +35,7 @@ router.post('/addUser', authAdminUser, async (req, res) => {
     }
 });
 
-router.delete('/deleteUser/:userId', authAdminUser, async (req, res) => {
+router.delete('/deleteUser/:userId', async (req, res) => {
     try {
         await userService.deleteUser(req.params.userId);
         res.send();

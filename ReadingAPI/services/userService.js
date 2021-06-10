@@ -31,6 +31,7 @@ exports.login = async (req, res) => {
 			res.status(404).send('Unable to login');
 		}
 	} catch (error) {
+        console.log(error);
 		res.status(400).send(error);
 	}
 };
